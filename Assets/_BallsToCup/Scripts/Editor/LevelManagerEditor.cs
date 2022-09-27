@@ -1,5 +1,7 @@
 ﻿using _BallsToCup.Scripts.Runtime;
+using _BallsToCup.Scripts.Runtime.ScriptableObjects;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace _BallsToCup.Scripts.Editor
@@ -9,10 +11,16 @@ namespace _BallsToCup.Scripts.Editor
     {
         public override void OnInspectorGUI()
         {
-            DrawDefaultInspector();
             LevelManager script = (LevelManager)target;
-            if (GUILayout.Button("Create level from values"))
+
+            CreateEditor(script.manualLoadLevel);
+            
+            if (GUILayout.Button("Create level manually"))
                 script.LoadLevelManual();
+            
+            DrawDefaultInspector();
+            
+
         }
     }
 }

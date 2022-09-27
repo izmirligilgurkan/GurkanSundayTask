@@ -9,6 +9,8 @@ namespace _BallsToCup.Scripts.Runtime
         private float rotateValue;
         private GameSettings gameSettings;
         private float Sensitivity => gameSettings.sensitivity;
+        [SerializeField] public SphereCollider ballZone;
+        
         private void OnEnable()
         {
             gameSettings = GameSettings.Instance;

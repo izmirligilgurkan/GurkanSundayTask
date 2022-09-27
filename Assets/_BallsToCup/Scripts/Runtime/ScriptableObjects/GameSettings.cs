@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using _BallsToCup.Scripts.Runtime.Patterns;
+using UnityEngine;
 
 namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
 {
@@ -6,5 +8,6 @@ namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
     public class GameSettings : ScriptableObjectSingleton<GameSettings>
     {
         public float sensitivity;
+        public List<Color> ballColors;
     }
 }

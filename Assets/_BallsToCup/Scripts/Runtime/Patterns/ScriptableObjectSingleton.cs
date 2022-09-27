@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
+namespace _BallsToCup.Scripts.Runtime.Patterns
 {
     public abstract class ScriptableObjectSingleton<T> : ScriptableObject where T : ScriptableObject
     {

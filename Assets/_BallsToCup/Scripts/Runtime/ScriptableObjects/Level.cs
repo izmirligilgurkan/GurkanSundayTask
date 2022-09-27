@@ -6,7 +6,8 @@ namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
     [CreateAssetMenu(fileName = "Level", menuName = "Level", order = 0)]
     public class Level : ScriptableObject
     {
-        public SVGImage svgImageForTube;
+        public Sprite svgImageForTube;
+        public bool invertShape;
         public int startBallCount;
         public int requiredBallCount;
     }

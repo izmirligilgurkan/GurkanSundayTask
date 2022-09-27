@@ -13,3 +13,10 @@ MonoBehaviour:
   m_Name: GameSettings
   m_EditorClassIdentifier: 
   sensitivity: 0.3
+  ballColors:
+  - {r: 1, g: 0, b: 0.3859768, a: 1}
+  - {r: 0.5717633, g: 1, b: 0.5707547, a: 1}
+  - {r: 0.6731691, g: 0.3915094, b: 1, a: 1}
+  - {r: 0.3820755, g: 1, b: 0.8933459, a: 1}
+  - {r: 1, g: 0.9197021, b: 0.3803922, a: 1}
+  - {r: 0.20425421, g: 0.36187923, b: 0.9622642, a: 1}
