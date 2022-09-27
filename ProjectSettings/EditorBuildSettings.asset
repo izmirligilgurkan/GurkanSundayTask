@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_BallsToCup/Scenes/MainScene.unity
+    guid: e8f09409bd6508344a4a89cd5fd2057a
   m_configObjects: {}
