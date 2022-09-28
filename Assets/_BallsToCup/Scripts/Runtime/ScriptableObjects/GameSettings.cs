@@ -8,6 +8,7 @@ namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
     public class GameSettings : ScriptableObjectSingleton<GameSettings>
     {
         public float sensitivity;
+        public float ballBounciness;
         public List<Color> ballColors;
     }
 }

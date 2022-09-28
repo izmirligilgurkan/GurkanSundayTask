@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 619a80fbfa3c4b0192d40ce0c6aaac42, type: 3}
   m_Name: Level 3
   m_EditorClassIdentifier: 
+  useSvg: 1
   svgImageForTube: {fileID: 3286163911610860551, guid: 43706475c5b79c14db404bb4d50fbcec, type: 3}
-  invertShape: 0
+  tubePrefabForNoSvg: {fileID: 0}
+  cupPosition: {x: 3, y: -4}
   startBallCount: 30
-  requiredBallCount: 0
+  requiredBallCount: 20

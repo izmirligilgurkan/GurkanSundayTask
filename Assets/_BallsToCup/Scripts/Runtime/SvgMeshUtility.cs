@@ -8,7 +8,7 @@ namespace _BallsToCup.Scripts.Runtime
 {
     public static class SvgMeshUtility
     {
-        public static Vector3[] SvgToPoints(Sprite svgImage, bool invertShape)
+        public static Vector3[] SvgToPoints(Sprite svgImage)
         {
             var spriteVertices = svgImage.vertices;
             var triangles = svgImage.triangles;
@@ -31,6 +31,7 @@ namespace _BallsToCup.Scripts.Runtime
                 verticesList.Reverse();
             }
             var offset = (Vector3)verticesList[0];
+
 
             return Array.ConvertAll(verticesList.ToArray(), point => new Vector3(point.x, point.y, 0) - offset);
         }

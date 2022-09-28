@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619a80fbfa3c4b0192d40ce0c6aaac42, type: 3}
+  m_Name: Level 6
+  m_EditorClassIdentifier: 
+  useSvg: 0
+  svgImageForTube: {fileID: 0}
+  tubePrefabForNoSvg: {fileID: 1596187800991173514, guid: 1c663e8a17977d94cabe64fcd4e84517, type: 3}
+  cupPosition: {x: 3, y: -5}
+  startBallCount: 30
+  requiredBallCount: 20
