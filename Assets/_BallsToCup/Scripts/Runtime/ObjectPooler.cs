@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using _BallsToCup.Scripts.Runtime.Patterns;
 using _BallsToCup.Scripts.Runtime.ScriptableObjects;
@@ -9,13 +8,13 @@ namespace _BallsToCup.Scripts.Runtime
 {
     public class ObjectPooler : MonoBehaviourSingleton<ObjectPooler>
     {
+        private static readonly List<GameObject> pooledObjects = new List<GameObject>();
         [SerializeField] private GameObject pooledObjectPrefab;
-        private static List<GameObject> pooledObjects = new List<GameObject>();
         [SerializeField] private int poolAmount = 100;
 
         private void OnEnable()
         {
-            for (int i = 0; i < poolAmount; i++)
+            for (var i = 0; i < poolAmount; i++)
             {
                 var instance = Instantiate(pooledObjectPrefab);
                 instance.SetActive(false);
@@ -32,10 +31,7 @@ namespace _BallsToCup.Scripts.Runtime
 
         private void OnLevelLoadStart(Level level)
         {
-            foreach (var pooledObject in pooledObjects)
-            {
-                pooledObject.SetActive(false);
-            }
+            foreach (var pooledObject in pooledObjects) pooledObject.SetActive(false);
         }
 
         public static GameObject GetPooledObject()

@@ -1,4 +1,3 @@
-using System;
 using _BallsToCup.Scripts.Runtime.ScriptableObjects;
 using UnityEngine;
 
@@ -8,11 +7,11 @@ namespace _BallsToCup.Scripts.Runtime
     {
         private GameSettings settings;
         public static int CurrentLevel => GetCurrentLevelSave();
+
         private void OnEnable()
         {
             settings = GameSettings.Instance;
         }
-
 
 
         private static int GetCurrentLevelSave()
@@ -24,7 +23,5 @@ namespace _BallsToCup.Scripts.Runtime
         {
             PlayerPrefs.SetInt("LevelNo", value);
         }
-        
-        
     }
 }

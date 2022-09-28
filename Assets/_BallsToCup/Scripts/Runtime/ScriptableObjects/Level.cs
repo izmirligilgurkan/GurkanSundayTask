@@ -1,5 +1,4 @@
-﻿using Unity.VectorGraphics;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
 {
@@ -9,8 +8,9 @@ namespace _BallsToCup.Scripts.Runtime.ScriptableObjects
         public bool useSvg;
         public Sprite svgImageForTube;
         public GameObject tubePrefabForNoSvg;
-        [Space] 
-        public Vector2 cupPosition;
+
+        [Space] public Vector2 cupPosition;
+
         public int startBallCount;
         public int requiredBallCount;
     }

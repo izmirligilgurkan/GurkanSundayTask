@@ -1,21 +1,21 @@
-using System;
 using _BallsToCup.Scripts.Runtime.Patterns;
 using _BallsToCup.Scripts.Runtime.ScriptableObjects;
 using Lean.Common;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace _BallsToCup.Scripts.Runtime
 {
     public class BallController : BaseMonoBehaviour
     {
-        private MeshRenderer meshRenderer;
-        private LeanConstrainToCollider leanConstrainToCollider;
         public bool inCup;
+        private LeanConstrainToCollider leanConstrainToCollider;
+        private MeshRenderer meshRenderer;
+
         private void OnEnable()
         {
             inCup = false;
             leanConstrainToCollider = GetComponentInChildren<LeanConstrainToCollider>();
+            leanConstrainToCollider.Collider = null;
             meshRenderer = GetComponentInChildren<MeshRenderer>();
             meshRenderer.material.color =
                 GameSettings.Instance.ballColors[Random.Range(0, GameSettings.Instance.ballColors.Count)];
@@ -29,10 +29,7 @@ namespace _BallsToCup.Scripts.Runtime
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.layer == 7)
-            {
-                transform.SetParent(null, true);
-            }
+            if (other.gameObject.layer == 7) transform.SetParent(null, true);
 
             if (other.gameObject.layer == 8 && !inCup)
             {
@@ -41,10 +38,7 @@ namespace _BallsToCup.Scripts.Runtime
                 LevelManager.BallCaptured?.Invoke();
             }
 
-            if (other.gameObject.layer == 9)
-            {
-                LevelManager.BallDestroyed?.Invoke(this);
-            }
+            if (other.gameObject.layer == 9) LevelManager.BallDestroyed?.Invoke(this);
         }
     }
 }

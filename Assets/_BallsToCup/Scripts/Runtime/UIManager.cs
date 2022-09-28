@@ -1,8 +1,6 @@
-﻿using System;
-using _BallsToCup.Scripts.Runtime.ScriptableObjects;
+﻿using _BallsToCup.Scripts.Runtime.ScriptableObjects;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _BallsToCup.Scripts.Runtime
 {
@@ -10,9 +8,9 @@ namespace _BallsToCup.Scripts.Runtime
     {
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private TextMeshProUGUI ballCountText;
-        private Camera mainCam;
         [SerializeField] private Canvas canvas;
-        
+        private Camera mainCam;
+
         private void OnEnable()
         {
             mainCam = Camera.main;
@@ -46,21 +44,20 @@ namespace _BallsToCup.Scripts.Runtime
 
         private void OnBallCaptured()
         {
-            ballCountText.text = $"{LevelManager.CapturedBallCount} / {LevelManager.Instance.currentLevelInstance.level.requiredBallCount}";
+            ballCountText.text =
+                $"{LevelManager.CapturedBallCount} / {LevelManager.Instance.currentLevelInstance.level.requiredBallCount}";
         }
-        
-        
+
+
         public static Vector3 WorldToScreenSpace(Vector3 worldPos, Camera cam, RectTransform area)
         {
-            Vector3 screenPoint = cam.WorldToScreenPoint(worldPos);
+            var screenPoint = cam.WorldToScreenPoint(worldPos);
             screenPoint.z = 0;
- 
+
             Vector2 screenPos;
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(area, screenPoint, cam, out screenPos))
-            {
                 return screenPos;
-            }
- 
+
             return screenPoint;
         }
     }

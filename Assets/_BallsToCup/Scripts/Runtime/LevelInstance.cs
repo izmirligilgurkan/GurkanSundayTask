@@ -9,15 +9,16 @@ namespace _BallsToCup.Scripts.Runtime
         public bool complete;
         public Level level;
         public GameObject cup;
-        private GameObject tubeBasePrefab;
-        private GameObject exitTriggerPrefab;
         private GameObject cupPrefab;
-        private float tubeRadius;
-        private Material tubeMaterial;
+        private GameObject exitTriggerPrefab;
         private int resolution;
+        private GameObject tubeBasePrefab;
+        private Material tubeMaterial;
+        private float tubeRadius;
 
 
-        public void Construct(Level level, GameObject tubeBasePrefab, GameObject exitTriggerPrefab, GameObject cupPrefab,float tubeRadius, Material tubeMaterial, int resolution)
+        public void Construct(Level level, GameObject tubeBasePrefab, GameObject exitTriggerPrefab,
+            GameObject cupPrefab, float tubeRadius, Material tubeMaterial, int resolution)
         {
             this.level = level;
             this.tubeBasePrefab = tubeBasePrefab;
@@ -27,7 +28,7 @@ namespace _BallsToCup.Scripts.Runtime
             this.tubeMaterial = tubeMaterial;
             this.resolution = resolution;
         }
-        
+
         public void Build()
         {
             TubeController tubeController;
@@ -43,11 +44,10 @@ namespace _BallsToCup.Scripts.Runtime
                 var tube = Instantiate(level.tubePrefabForNoSvg, transform);
                 tubeController = tube.GetComponentInChildren<TubeController>();
             }
-            
-            
+
+
             SpawnCup();
             SpawnBalls(tubeController);
-            
         }
 
 
@@ -89,14 +89,14 @@ namespace _BallsToCup.Scripts.Runtime
             var col = tubeController.ballZone;
             var center = col.center;
             var radius = col.radius;
-            
-            for (int i = 0; i < level.startBallCount; i++)
+
+            for (var i = 0; i < level.startBallCount; i++)
             {
-                var randomPos = (Vector3)Random.insideUnitCircle;
+                var randomPos = (Vector3) Random.insideUnitCircle;
                 randomPos *= radius;
                 randomPos += col.transform.TransformPoint(center);
                 var ball = ObjectPooler.GetPooledObject();
-                
+
                 ball.transform.SetParent(tubeController.transform);
                 ball.transform.position = randomPos;
                 ball.gameObject.SetActive(true);
@@ -108,7 +108,5 @@ namespace _BallsToCup.Scripts.Runtime
             cup = Instantiate(cupPrefab, transform);
             cup.transform.position = level.cupPosition;
         }
-
-        
     }
 }

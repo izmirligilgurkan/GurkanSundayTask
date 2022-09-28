@@ -6,11 +6,17 @@ namespace _BallsToCup.Scripts.Runtime
 {
     public class TubeController : BaseMonoBehaviour
     {
-        private float rotateValue;
-        private GameSettings gameSettings;
-        private float Sensitivity => gameSettings.sensitivity;
         [SerializeField] public SphereCollider ballZone;
-        
+        private GameSettings gameSettings;
+        private float rotateValue;
+        private float Sensitivity => gameSettings.sensitivity;
+
+        private void FixedUpdate()
+        {
+            transform.rotation *= Quaternion.AngleAxis(rotateValue * Sensitivity, Vector3.forward);
+            rotateValue = 0;
+        }
+
         private void OnEnable()
         {
             gameSettings = GameSettings.Instance;
@@ -25,12 +31,6 @@ namespace _BallsToCup.Scripts.Runtime
         private void OnRotateCommand(float delta)
         {
             rotateValue += delta;
-        }
-
-        private void FixedUpdate()
-        {
-            transform.rotation *= Quaternion.AngleAxis(rotateValue * Sensitivity, Vector3.forward);
-            rotateValue = 0;
         }
     }
 }
