@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using _BallsToCup.Scripts.Runtime.Patterns;
 using _BallsToCup.Scripts.Runtime.ScriptableObjects;
+using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _BallsToCup.Scripts.Runtime
 {
@@ -28,7 +30,8 @@ namespace _BallsToCup.Scripts.Runtime
 
         [SerializeField] private Material tubeMaterial;
         [SerializeField] private int resolution;
-
+        [SerializeField] private Material backgroundMaterial;
+        
 
         [HideInInspector] [SerializeField] public LevelInstance currentLevelInstance;
         public static int CapturedBallCount => CurrentlyActiveBalls.Count(controller => controller.inCup);
@@ -67,12 +70,15 @@ namespace _BallsToCup.Scripts.Runtime
 
         public static event Action<Level> OnLevelLoadStart;
         public static event Action<Level> OnLevelLoaded;
+        public static event Action OnLevelFailed;
+        public static event Action OnLevelCompleted;
 
         private void OnBallDestroyed(BallController ball)
         {
+            ball.transform.SetParent(null);
             ball.gameObject.SetActive(false);
             if (CurrentlyActiveBalls.All(controller => controller.inCup) &&
-                CapturedBallCount < currentLevelInstance.level.requiredBallCount) RestartLevel();
+                CapturedBallCount < currentLevelInstance.level.requiredBallCount) OnLevelFailed?.Invoke();
         }
 
         private void OnBallCaptured()
@@ -80,54 +86,90 @@ namespace _BallsToCup.Scripts.Runtime
             if (CapturedBallCount >= currentLevelInstance.level.requiredBallCount && !currentLevelInstance.complete)
             {
                 currentLevelInstance.complete = true;
-                NextLevel();
+                OnLevelCompleted?.Invoke();
+            }
+            else if (CurrentlyActiveBalls.All(controller => controller.inCup) &&
+                CapturedBallCount < currentLevelInstance.level.requiredBallCount) OnLevelFailed?.Invoke();
+        }
+
+        public void NextLevel()
+        {
+            currentLevelInstance.transform.DOMoveX(-10f, .5f).SetRelative().SetEase(Ease.InBack).OnComplete(AfterAnimation);
+            
+            void AfterAnimation()
+            {
+                Destroy(currentLevelInstance.gameObject);
+                GameManager.SetCurrentLevelSave(GameManager.CurrentLevel + 1);
+                LoadLevelRuntime(levels[GameManager.CurrentLevel % levels.Count]);
             }
         }
 
-        private void NextLevel()
+        
+
+        public void RestartLevel()
         {
             Destroy(currentLevelInstance.gameObject);
-            GameManager.SetCurrentLevelSave(GameManager.CurrentLevel + 1);
             LoadLevelRuntime(levels[GameManager.CurrentLevel % levels.Count]);
         }
 
-        private void RestartLevel()
+        private void LevelLoadStart(Level level)
         {
-            Destroy(currentLevelInstance.gameObject);
-            LoadLevelRuntime(levels[GameManager.CurrentLevel % levels.Count]);
+            OnLevelLoadStart?.Invoke(level);
+            
+        }
+
+        private void LevelLoadEnd(Level level)
+        {
+            OnLevelLoaded?.Invoke(level);
         }
 
 
         public void LoadLevelManual()
         {
-            OnLevelLoadStart?.Invoke(manualLoadLevel);
-
+            LevelLoadStart(manualLoadLevel);
+            
             if (currentLevelInstance) DestroyImmediate(currentLevelInstance.gameObject);
 
-            var levelGameObject = new GameObject("Level");
-            var levelInstance = levelGameObject.AddComponent<LevelInstance>();
-            levelInstance.Construct(manualLoadLevel, tubeBasePrefab, exitTriggerPrefab, cupPrefab, tubeRadius,
-                tubeMaterial, resolution);
-            levelInstance.Build();
+            LoadLevel(manualLoadLevel);
 
-            currentLevelInstance = levelInstance;
-
-            OnLevelLoaded?.Invoke(manualLoadLevel);
+            LevelLoadEnd(manualLoadLevel);
         }
 
         private void LoadLevelRuntime(Level level)
         {
-            OnLevelLoadStart?.Invoke(level);
+            LevelLoadStart(level);
 
+            LoadLevel(level);
+
+            LevelLoadEnd(level);
+        }
+
+        private void LoadLevel(Level level)
+        {
+            Random.InitState(GameManager.CurrentLevel);
+            var randomColor = GameSettings.Instance.ballColors[Random.Range(0, GameSettings.Instance.ballColors.Count)];
+            var mixedColor = Color.Lerp(randomColor, Color.white, .3f);
+            backgroundMaterial.color = mixedColor;
             var levelGameObject = new GameObject("Level");
             var levelInstance = levelGameObject.AddComponent<LevelInstance>();
             levelInstance.Construct(level, tubeBasePrefab, exitTriggerPrefab, cupPrefab, tubeRadius, tubeMaterial,
                 resolution);
             levelInstance.Build();
-
+            var initPos = levelInstance.transform.position;
+            levelInstance.transform.position += Vector3.right * 10f;
+            ToggleBallRigidbodies(false);
+            levelInstance.transform.DOMove(initPos, .5f).SetEase(Ease.OutBack).SetUpdate(UpdateType.Fixed).OnComplete(() => ToggleBallRigidbodies(true));
+            
             currentLevelInstance = levelInstance;
+        }
 
-            OnLevelLoaded?.Invoke(level);
+        private void ToggleBallRigidbodies(bool enable)
+        {
+            foreach (var controller in CurrentlyActiveBalls)
+            {
+                controller.rigidbody.isKinematic = !enable;
+                controller.rigidbody.velocity = Vector3.zero;
+            }
         }
     }
 }

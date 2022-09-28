@@ -1,6 +1,7 @@
 ﻿using _BallsToCup.Scripts.Runtime.ScriptableObjects;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace _BallsToCup.Scripts.Runtime
 {
@@ -8,6 +9,8 @@ namespace _BallsToCup.Scripts.Runtime
     {
         [SerializeField] private TextMeshProUGUI levelText;
         [SerializeField] private TextMeshProUGUI ballCountText;
+        [SerializeField] private GameObject levelCompletedParent;
+        [SerializeField] private GameObject levelFailedParent;
         [SerializeField] private Canvas canvas;
         private Camera mainCam;
 
@@ -16,6 +19,11 @@ namespace _BallsToCup.Scripts.Runtime
             mainCam = Camera.main;
             LevelManager.BallCaptured += OnBallCaptured;
             LevelManager.OnLevelLoaded += OnLevelLoaded;
+            LevelManager.OnLevelCompleted += OnLevelCompleted;
+            LevelManager.OnLevelFailed += OnLevelFailed;
+            levelCompletedParent.GetComponentInChildren<Button>().onClick.AddListener(LevelCompletedButtonPressed);
+            levelFailedParent.GetComponentInChildren<Button>().onClick.AddListener(LevelFailedButtonPressed);
+
             //InitializeBallCountText();
         }
 
@@ -23,13 +31,36 @@ namespace _BallsToCup.Scripts.Runtime
         {
             LevelManager.BallCaptured -= OnBallCaptured;
             LevelManager.OnLevelLoaded -= OnLevelLoaded;
+            LevelManager.OnLevelCompleted -= OnLevelCompleted;
+            LevelManager.OnLevelFailed -= OnLevelFailed;
+        }
+
+        private void OnLevelCompleted()
+        {
+            levelCompletedParent.SetActive(true);
+        }
+
+        private void OnLevelFailed()
+        {
+            levelFailedParent.SetActive(true);
+        }
+        private void LevelCompletedButtonPressed()
+        {
+            LevelManager.Instance.NextLevel();
+        }
+        private void LevelFailedButtonPressed()
+        {
+            LevelManager.Instance.RestartLevel();
         }
 
         private void OnLevelLoaded(Level level)
         {
+            levelCompletedParent.SetActive(false);
+            levelFailedParent.SetActive(false);
             InitializeBallCountText();
             SetLevelText();
         }
+        
 
         private void SetLevelText()
         {
