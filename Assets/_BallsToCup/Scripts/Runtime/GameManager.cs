@@ -6,11 +6,14 @@ namespace _BallsToCup.Scripts.Runtime
     public class GameManager : MonoBehaviour
     {
         private GameSettings settings;
+        [SerializeField] private PhysicMaterial physicMaterial;
+        
         public static int CurrentLevel => GetCurrentLevelSave();
 
         private void OnEnable()
         {
             settings = GameSettings.Instance;
+            physicMaterial.bounciness = settings.ballBounciness;
         }
 
 

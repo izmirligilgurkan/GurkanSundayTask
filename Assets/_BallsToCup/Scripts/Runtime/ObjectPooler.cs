@@ -31,13 +31,24 @@ namespace _BallsToCup.Scripts.Runtime
 
         private void OnLevelLoadStart(Level level)
         {
-            foreach (var pooledObject in pooledObjects) pooledObject.SetActive(false);
+            foreach (var pooledObject in pooledObjects)
+            {
+                pooledObject.transform.SetParent(null);
+                pooledObject.SetActive(false);
+            }
         }
 
         public static GameObject GetPooledObject()
         {
             var firstOrDefault = pooledObjects.FirstOrDefault(o => o && !o.activeInHierarchy);
-            return firstOrDefault ? firstOrDefault : Instantiate(Instance.pooledObjectPrefab);
+            if (firstOrDefault)
+            {
+                return firstOrDefault;
+            }
+
+            var instance = Instantiate(Instance.pooledObjectPrefab);
+            pooledObjects.Add(instance);
+            return instance;
         }
     }
 }

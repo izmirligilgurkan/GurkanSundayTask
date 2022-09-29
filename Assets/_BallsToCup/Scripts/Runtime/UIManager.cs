@@ -1,4 +1,5 @@
 ﻿using _BallsToCup.Scripts.Runtime.ScriptableObjects;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,20 +12,17 @@ namespace _BallsToCup.Scripts.Runtime
         [SerializeField] private TextMeshProUGUI ballCountText;
         [SerializeField] private GameObject levelCompletedParent;
         [SerializeField] private GameObject levelFailedParent;
-        [SerializeField] private Canvas canvas;
-        private Camera mainCam;
+        [SerializeField] private GameObject levelCompletedAnimation;
+        [SerializeField] private GameObject levelFailedAnimation;
 
         private void OnEnable()
         {
-            mainCam = Camera.main;
             LevelManager.BallCaptured += OnBallCaptured;
             LevelManager.OnLevelLoaded += OnLevelLoaded;
             LevelManager.OnLevelCompleted += OnLevelCompleted;
             LevelManager.OnLevelFailed += OnLevelFailed;
             levelCompletedParent.GetComponentInChildren<Button>().onClick.AddListener(LevelCompletedButtonPressed);
             levelFailedParent.GetComponentInChildren<Button>().onClick.AddListener(LevelFailedButtonPressed);
-
-            //InitializeBallCountText();
         }
 
         private void OnDisable()
@@ -38,25 +36,29 @@ namespace _BallsToCup.Scripts.Runtime
         private void OnLevelCompleted()
         {
             levelCompletedParent.SetActive(true);
+            levelCompletedAnimation.transform.DOScale(Vector3.one * 1.2f, .2f).SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.InQuad);
         }
 
         private void OnLevelFailed()
         {
             levelFailedParent.SetActive(true);
+            levelFailedAnimation.transform.DOScale(Vector3.one * 1.2f, .2f).SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.OutQuad);
         }
         private void LevelCompletedButtonPressed()
         {
             LevelManager.Instance.NextLevel();
+            levelCompletedParent.SetActive(false);
         }
         private void LevelFailedButtonPressed()
         {
             LevelManager.Instance.RestartLevel();
+            levelFailedParent.SetActive(false);
         }
 
         private void OnLevelLoaded(Level level)
         {
-            levelCompletedParent.SetActive(false);
-            levelFailedParent.SetActive(false);
             InitializeBallCountText();
             SetLevelText();
         }
@@ -78,18 +80,6 @@ namespace _BallsToCup.Scripts.Runtime
             ballCountText.text =
                 $"{LevelManager.CapturedBallCount} / {LevelManager.Instance.currentLevelInstance.level.requiredBallCount}";
         }
-
-
-        public static Vector3 WorldToScreenSpace(Vector3 worldPos, Camera cam, RectTransform area)
-        {
-            var screenPoint = cam.WorldToScreenPoint(worldPos);
-            screenPoint.z = 0;
-
-            Vector2 screenPos;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(area, screenPoint, cam, out screenPos))
-                return screenPos;
-
-            return screenPoint;
-        }
+        
     }
 }

@@ -83,6 +83,7 @@ namespace _BallsToCup.Scripts.Runtime
 
         private void OnBallCaptured()
         {
+            Handheld.Vibrate();
             if (CapturedBallCount >= currentLevelInstance.level.requiredBallCount && !currentLevelInstance.complete)
             {
                 currentLevelInstance.complete = true;
@@ -94,13 +95,17 @@ namespace _BallsToCup.Scripts.Runtime
 
         public void NextLevel()
         {
-            currentLevelInstance.transform.DOMoveX(-10f, .5f).SetRelative().SetEase(Ease.InBack).OnComplete(AfterAnimation);
+            var oldLevel = currentLevelInstance;
+            oldLevel.transform.DOComplete();
+            
+            oldLevel.transform.DOMoveX(-10f, .5f).SetRelative().SetEase(Ease.InBack).OnComplete(AfterAnimation);
+            
             
             void AfterAnimation()
             {
-                Destroy(currentLevelInstance.gameObject);
                 GameManager.SetCurrentLevelSave(GameManager.CurrentLevel + 1);
                 LoadLevelRuntime(levels[GameManager.CurrentLevel % levels.Count]);
+                Destroy(oldLevel.gameObject);
             }
         }
 
@@ -108,14 +113,15 @@ namespace _BallsToCup.Scripts.Runtime
 
         public void RestartLevel()
         {
-            Destroy(currentLevelInstance.gameObject);
+            var oldLevel = currentLevelInstance;
+            oldLevel.transform.DOComplete();
             LoadLevelRuntime(levels[GameManager.CurrentLevel % levels.Count]);
+            Destroy(oldLevel.gameObject);
         }
 
         private void LevelLoadStart(Level level)
         {
             OnLevelLoadStart?.Invoke(level);
-            
         }
 
         private void LevelLoadEnd(Level level)

@@ -16,5 +16,5 @@ MonoBehaviour:
   svgImageForTube: {fileID: 0}
   tubePrefabForNoSvg: {fileID: 647639278628230442, guid: 3104c6e1477c91548a4d9c904e2037a5, type: 3}
   cupPosition: {x: -2, y: -5}
-  startBallCount: 30
-  requiredBallCount: 20
+  startBallCount: 25
+  requiredBallCount: 15

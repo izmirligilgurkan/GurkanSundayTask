@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb83dcd0b534dc2b8df4314124c4b8b, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  sensitivity: 0.3
+  sensitivity: 0.5
   ballBounciness: 0
   ballColors:
   - {r: 0.8431373, g: 0.43529415, b: 0.5568628, a: 1}
